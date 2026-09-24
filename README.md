@@ -253,6 +253,40 @@ El sitio puede utilizarse desde:
 
 ---
 
+## 📸 Evidencias
+
+### Catálogo de productos
+
+Vista principal del catálogo, mostrando imagen, nombre, descripción, precio normal, precio de oferta y opción para agregar productos al carrito.
+
+![Catálogo de productos](evidencia/01-catalogo.PNG)
+
+### Carrito de compras
+
+El carrito permite agregar productos, modificar sus cantidades y visualizar tanto la cantidad total de productos como el precio total de la compra.
+
+![Carrito de compras](evidencia/02-carrito.PNG)
+
+### Búsqueda y renderizado condicional
+
+El buscador utiliza el evento `onChange` para actualizar dinámicamente los resultados. Cuando no existen coincidencias, se muestra un mensaje mediante renderizado condicional.
+
+![Búsqueda sin resultados](evidencia/03-busqueda-sin-resultados.PNG)
+
+### Filtrado por categoría
+
+La aplicación permite filtrar dinámicamente los productos según su categoría.
+
+![Filtro de accesorios](evidencia/04-filtro-accesorios.PNG)
+
+### Diseño responsive
+
+La interfaz se adapta a diferentes tamaños de pantalla utilizando Bootstrap y estilos personalizados.
+
+![Vista responsive móvil](evidencia/05-responsive-movil.PNG)
+
+---
+
 ## 👩‍💻 Autor
 
 Sofía Medina.
