@@ -137,24 +137,24 @@ function App() {
 
     const productosFiltrados = products.filter((producto) => {
 
-    const coincideCategoria =
-        categoria === "todos" ||
-        producto.categoria === categoria;
+        const coincideCategoria =
+            categoria === "todos" ||
+            producto.categoria === categoria;
 
-    const textoBusqueda = busqueda
-        .trim()
-        .toLowerCase();
+        const textoBusqueda = busqueda
+            .trim()
+            .toLowerCase();
 
-    const coincideBusqueda =
-        producto.nombre
-            .toLowerCase()
-            .includes(textoBusqueda) ||
+        const coincideBusqueda =
+            producto.nombre
+                .toLowerCase()
+                .includes(textoBusqueda) ||
 
-        producto.descripcion
-            .toLowerCase()
-            .includes(textoBusqueda);
+            producto.descripcion
+                .toLowerCase()
+                .includes(textoBusqueda);
 
-    return coincideCategoria && coincideBusqueda;
+        return coincideCategoria && coincideBusqueda;
     });
 
     const cambiarCategoria = (nuevaCategoria) => {
