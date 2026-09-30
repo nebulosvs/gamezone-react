@@ -411,21 +411,6 @@ El catálogo modifica automáticamente la cantidad de columnas según el espacio
 
 ---
 
-## 📸 Evidencias
-
-Las evidencias de funcionamiento de la aplicación serán incorporadas en esta sección.
-
-Se incluirán capturas correspondientes a:
-
-- Productos cargados dinámicamente desde el archivo JSON.
-- Carrito de compras con productos agregados.
-- Modificación y eliminación de productos del carrito.
-- Renderizado condicional del botón `✓ Agregado`.
-- Mensaje mostrado cuando el carrito se encuentra vacío.
-- Vista responsive de la aplicación.
-
----
-
 ## 👩‍💻 Autor
 
 Sofía Medina.
