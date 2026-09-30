@@ -1,37 +1,46 @@
 import ProductCard from "./ProductCard";
 
-function ProductList({ productos, agregarAlCarrito }) {
 
-    return (
-        <section id="productos" className="container my-5">
+function ProductList({
+    productos,
+    agregarAlCarrito
+}) {
 
-            <h2 className="text-center mb-4">
-                Nuestros productos
-            </h2>
+    if (productos.length === 0) {
 
-            {productos.length > 0 ? (
+        return (
+            <main className="container my-5">
 
-                <div className="row g-4">
-
-                    {productos.map((producto) => (
-                        <ProductCard
-                            key={producto.id}
-                            producto={producto}
-                            agregarAlCarrito={agregarAlCarrito}
-                        />
-                    ))}
-
-                </div>
-
-            ) : (
-
-                <div className="alert alert-warning text-center">
+                <div
+                    className="alert alert-warning text-center"
+                    role="alert"
+                >
                     No se encontraron productos.
                 </div>
 
-            )}
+            </main>
+        );
+    }
 
-        </section>
+
+    return (
+        <main className="container my-5">
+
+            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+
+                {productos.map((producto) => (
+
+                    <ProductCard
+                        key={producto.id}
+                        producto={producto}
+                        agregarAlCarrito={agregarAlCarrito}
+                    />
+
+                ))}
+
+            </div>
+
+        </main>
     );
 }
 

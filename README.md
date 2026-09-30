@@ -1,10 +1,8 @@
 # 🎮 GameZone - eCommerce React
 
-GameZone es una aplicación web de eCommerce orientada a la venta de videojuegos, consolas y accesorios.
+GameZone es una aplicación web de eCommerce enfocada en la venta de videojuegos, consolas y accesorios.
 
-Este proyecto corresponde a la evolución de una versión anterior de GameZone, incorporando **React** para construir una interfaz basada en componentes funcionales, manejo de estados mediante **Hooks**, eventos y renderizado condicional.
-
-La aplicación permite explorar productos, filtrar por categoría, realizar búsquedas y administrar un carrito de compras de manera interactiva.
+El proyecto fue desarrollado utilizando **React + Vite** y continúa la evolución de las versiones anteriores de GameZone, incorporando componentes funcionales, gestión de estados con `useState`, manejo de efectos secundarios con `useEffect`, carga dinámica de productos y renderizado condicional.
 
 ---
 
@@ -12,130 +10,261 @@ La aplicación permite explorar productos, filtrar por categoría, realizar bús
 
 La aplicación se encuentra desplegada mediante GitHub Pages:
 
-👉 https://nebulosvs.github.io/gamezone-react/
+https://nebulosvs.github.io/gamezone-react/
 
 ---
 
-## 🚀 Funcionalidades
+## ✨ Funcionalidades
 
-### 🛍️ Catálogo de productos
+GameZone incluye las siguientes funcionalidades:
 
-Cada producto presenta:
-
-- Imagen.
-- Nombre.
-- Descripción.
-- Precio normal.
-- Precio de oferta.
-- Botón para agregar al carrito.
-
-El catálogo incluye consolas y accesorios de videojuegos.
-
-### 🔎 Búsqueda de productos
-
-La aplicación cuenta con un buscador dinámico desarrollado con React.
-
-Los productos se filtran mientras el usuario escribe utilizando el evento `onChange` y un estado administrado con `useState`.
-
-Si no existen productos que coincidan con la búsqueda, se muestra un mensaje mediante renderizado condicional.
-
-### 🎯 Filtrado por categorías
-
-Desde la barra de navegación se pueden visualizar:
-
-- Todos los productos.
-- Consolas.
-- Accesorios.
-
-El cambio de categoría actualiza dinámicamente los productos mostrados.
-
-### 🛒 Carrito de compras
-
-El carrito permite:
-
-- Agregar productos.
-- Incrementar la cantidad de un producto.
-- Disminuir la cantidad.
-- Eliminar un producto cuando su cantidad llega a cero.
+- Visualización dinámica del catálogo de productos.
+- Carga de productos desde un archivo JSON local.
+- Indicador visual mientras se cargan los productos.
+- Manejo de errores durante la carga del catálogo.
+- Filtrado de productos por categoría:
+  - Inicio.
+  - Consolas.
+  - Accesorios.
+- Búsqueda de productos por nombre o descripción.
+- Carrito de compras interactivo.
+- Agregar productos al carrito.
+- Aumentar y disminuir la cantidad de cada producto.
+- Eliminar productos del carrito.
 - Vaciar completamente el carrito.
-- Visualizar la cantidad total de productos.
-- Calcular automáticamente el precio total de la compra.
-
-Los cálculos se realizan utilizando el precio de oferta de cada producto.
-
-Cuando el carrito está vacío, React muestra un mensaje mediante renderizado condicional.
+- Contador total de productos.
+- Cálculo automático del precio total.
+- Mensaje cuando el carrito se encuentra vacío.
+- Mensaje cuando una búsqueda no encuentra productos.
+- Confirmación visual temporal al agregar un producto.
+- Diseño responsive para escritorio, tablet y dispositivos móviles.
 
 ---
 
 ## ⚛️ Implementación con React
 
-La aplicación utiliza componentes funcionales para separar las distintas responsabilidades de la interfaz.
+La aplicación está construida mediante componentes funcionales de React.
 
 Los principales componentes son:
 
-- `Navbar`: navegación, categorías y contador del carrito.
+- `Navbar`: navegación entre categorías y acceso al carrito.
 - `SearchBar`: búsqueda dinámica de productos.
-- `ProductList`: listado y renderizado condicional de productos.
-- `ProductCard`: representación reutilizable de cada producto.
-- `Cart`: administración visual del carrito.
-- `Footer`: información final del sitio.
+- `ProductList`: listado y renderizado de productos.
+- `ProductCard`: representación individual de cada producto.
+- `Cart`: administración de productos seleccionados.
+- `Footer`: información inferior de la aplicación.
 
-El componente `App` administra los principales estados y funciones de la aplicación.
+Esta organización permite separar responsabilidades y mantener el código modular y reutilizable.
 
 ---
 
-## 🪝 Manejo de estados
+## 🔄 Carga dinámica de productos
 
-Se utiliza el Hook `useState` para manejar información dinámica de la aplicación.
+Los productos ya no se encuentran definidos directamente dentro de los componentes de React.
 
-Entre los estados utilizados se encuentran:
+La información del catálogo se almacena en:
 
+```text
+public/data/productos.json
+```
+
+Al iniciar la aplicación, `App.jsx` utiliza `useEffect` junto con `fetch()` para cargar los productos dinámicamente.
+
+El proceso general es:
+
+```text
+productos.json
+      ↓
+    fetch()
+      ↓
+  useEffect()
+      ↓
+ setProductos()
+      ↓
+   useState
+      ↓
+   Catálogo
+```
+
+Una vez obtenidos los datos del archivo JSON, el estado del catálogo se actualiza mediante `setProductos()` y React vuelve a renderizar la interfaz con los productos disponibles.
+
+---
+
+## 🧠 Gestión de estados con useState
+
+La aplicación utiliza el Hook `useState` para gestionar diferentes estados.
+
+En `App.jsx` se administran:
+
+- Lista de productos.
 - Productos agregados al carrito.
 - Categoría seleccionada.
 - Texto ingresado en el buscador.
+- Estado de carga del catálogo.
+- Estado de error durante la carga.
 
-Cuando estos estados cambian, React actualiza automáticamente los componentes correspondientes.
+Además, `ProductCard` utiliza un estado interno para mostrar una confirmación temporal cuando un producto es agregado al carrito.
+
+Por ejemplo:
+
+```jsx
+const [agregado, setAgregado] = useState(false);
+```
+
+Esto permite modificar dinámicamente la interfaz según las acciones realizadas por el usuario.
 
 ---
 
-## 🖱️ Eventos
+## ⚙️ Manejo de efectos con useEffect
 
-La aplicación utiliza eventos de React para permitir la interacción del usuario.
+La aplicación utiliza `useEffect` para manejar efectos secundarios.
 
-Entre ellos:
+### Carga inicial del catálogo
 
-- `onClick` para agregar productos.
-- `onClick` para aumentar y disminuir cantidades.
-- `onClick` para vaciar el carrito.
-- `onClick` para seleccionar categorías.
-- `onChange` para realizar búsquedas dinámicas.
+Al cargar la aplicación se realiza una petición al archivo:
+
+```text
+public/data/productos.json
+```
+
+Los datos obtenidos son almacenados posteriormente en el estado `productos`.
+
+La carga se ejecuta una vez cuando se monta el componente principal.
+
+### Confirmación temporal del carrito
+
+`ProductCard` también utiliza `useEffect` para controlar el mensaje temporal mostrado después de agregar un producto.
+
+Al presionar:
+
+```text
+Agregar al carrito
+```
+
+el botón cambia temporalmente a:
+
+```text
+✓ Agregado
+```
+
+Después de aproximadamente dos segundos vuelve automáticamente a su estado original.
+
+El temporizador utiliza una función de limpieza con `clearTimeout()` para evitar efectos secundarios innecesarios.
 
 ---
 
 ## 🔀 Renderizado condicional
 
-Se implementó renderizado condicional para adaptar la interfaz según el estado de la aplicación.
+GameZone utiliza renderizado condicional en diferentes partes de la aplicación para mejorar la experiencia del usuario.
 
-Por ejemplo:
+### Carga de productos
 
-- Si el carrito está vacío, se muestra un mensaje informativo.
-- Si una búsqueda no encuentra productos, se informa al usuario.
-- Si existen productos, se generan dinámicamente sus respectivas tarjetas.
+Mientras los productos están siendo obtenidos desde el archivo JSON se muestra:
+
+```text
+Cargando productos...
+```
+
+### Error de carga
+
+Si ocurre un problema durante la carga del catálogo, se muestra un mensaje de error.
+
+### Búsqueda sin resultados
+
+Cuando ningún producto coincide con los filtros o con el texto ingresado:
+
+```text
+No se encontraron productos.
+```
+
+### Carrito vacío
+
+Cuando todavía no existen productos agregados:
+
+```text
+Tu carrito está vacío.
+```
+
+### Producto agregado
+
+Al agregar un producto, el botón cambia temporalmente:
+
+```text
+Agregar al carrito
+```
+
+por:
+
+```text
+✓ Agregado
+```
+
+y también modifica su estilo visual.
 
 ---
 
-## 🛠️ Tecnologías utilizadas
+## 🛒 Carrito de compras
 
-- HTML5
-- CSS3
-- JavaScript
-- React
-- React Hooks
-- Vite
-- Bootstrap 5
-- Git
-- GitHub
-- GitHub Pages
+El carrito permite administrar los productos seleccionados por el usuario.
+
+Cada producto posee una propiedad `cantidad`.
+
+Si se agrega nuevamente un producto existente, su cantidad aumenta en lugar de crear un elemento duplicado.
+
+Desde el carrito es posible:
+
+- Incrementar la cantidad con `+`.
+- Disminuir la cantidad con `-`.
+- Eliminar un producto al disminuir su última unidad.
+- Vaciar completamente el carrito.
+
+La aplicación calcula automáticamente:
+
+- Cantidad total de productos.
+- Subtotal de cada producto.
+- Precio total de la compra.
+
+---
+
+## 🔎 Búsqueda y categorías
+
+Los productos pueden filtrarse mediante dos mecanismos.
+
+### Categorías
+
+La barra de navegación permite seleccionar:
+
+```text
+Inicio
+Consolas
+Accesorios
+```
+
+### Buscador
+
+El buscador utiliza un input controlado mediante React.
+
+El evento `onChange` actualiza el estado de búsqueda y permite encontrar coincidencias tanto en el nombre como en la descripción del producto.
+
+---
+
+## 🧩 Reutilización de código
+
+Las funciones reutilizables se encuentran separadas de los componentes cuando corresponde.
+
+El archivo:
+
+```text
+src/utils/formatters.js
+```
+
+contiene la función:
+
+```javascript
+formatearPrecio()
+```
+
+Esta función es utilizada tanto por `ProductCard` como por `Cart`, evitando duplicar la lógica encargada de mostrar valores monetarios en pesos chilenos.
 
 ---
 
@@ -145,6 +274,9 @@ Por ejemplo:
 gamezone-react/
 │
 ├── public/
+│   ├── data/
+│   │   └── productos.json
+│   │
 │   └── img/
 │       ├── playstation5.jpg
 │       ├── xbox-series-x.jpg
@@ -162,8 +294,8 @@ gamezone-react/
 │   │   ├── ProductList.jsx
 │   │   └── SearchBar.jsx
 │   │
-│   ├── data/
-│   │   └── products.js
+│   ├── utils/
+│   │   └── formatters.js
 │   │
 │   ├── App.css
 │   ├── App.jsx
@@ -179,9 +311,27 @@ gamezone-react/
 
 ---
 
-## 💻 Instalación y ejecución local
+## 🛠️ Tecnologías utilizadas
 
-Para ejecutar el proyecto localmente es necesario tener instalado Node.js.
+- HTML5
+- CSS3
+- JavaScript
+- React
+- React Hooks
+  - `useState`
+  - `useEffect`
+- Vite
+- Bootstrap 5
+- JSON
+- Git
+- GitHub
+- GitHub Pages
+
+---
+
+## ▶️ Instalación y ejecución
+
+Para ejecutar el proyecto localmente:
 
 ### 1. Clonar el repositorio
 
@@ -195,105 +345,94 @@ git clone https://github.com/nebulosvs/gamezone-react.git
 cd gamezone-react
 ```
 
-### 3. Instalar dependencias
+### 3. Instalar las dependencias
 
 ```bash
 npm install
 ```
 
-### 4. Ejecutar en modo desarrollo
+### 4. Ejecutar el servidor de desarrollo
 
 ```bash
 npm run dev
 ```
 
-Vite mostrará la dirección local donde se encuentra disponible la aplicación.
+Vite mostrará en la terminal la dirección local donde se encuentra disponible la aplicación.
 
 ---
 
-## 📦 Compilación de producción
+## 🏗️ Generar versión de producción
 
-Para generar la versión de producción:
+Para comprobar y generar la versión optimizada:
 
 ```bash
 npm run build
 ```
 
-Para comprobar localmente la versión compilada:
+Los archivos generados serán almacenados en:
 
-```bash
-npm run preview
+```text
+dist/
 ```
 
 ---
 
-## 🌐 Despliegue
+## 🚀 Despliegue con GitHub Pages
 
-El proyecto utiliza `gh-pages` para desplegar la aplicación React en GitHub Pages.
+El proyecto utiliza la rama `gh-pages` para publicar la aplicación.
 
-El despliegue se ejecuta mediante:
+La configuración de Vite utiliza:
+
+```javascript
+base: "/gamezone-react/"
+```
+
+Para realizar el despliegue:
 
 ```bash
 npm run deploy
 ```
 
-Vite genera la versión de producción en `dist` y `gh-pages` publica su contenido en la rama correspondiente.
+El script genera la versión de producción y publica el contenido correspondiente mediante GitHub Pages.
 
 ---
 
 ## 📱 Diseño responsive
 
-La interfaz utiliza Bootstrap y estilos personalizados para adaptarse a distintos tamaños de pantalla.
+GameZone utiliza Bootstrap y estilos CSS personalizados para adaptarse a diferentes tamaños de pantalla.
 
-El sitio puede utilizarse desde:
+La aplicación puede utilizarse desde:
 
 - Computadores de escritorio.
 - Tablets.
 - Dispositivos móviles.
 
+El catálogo modifica automáticamente la cantidad de columnas según el espacio disponible.
+
 ---
 
 ## 📸 Evidencias
 
-### Catálogo de productos
+Las evidencias de funcionamiento de la aplicación serán incorporadas en esta sección.
 
-Vista principal del catálogo, mostrando imagen, nombre, descripción, precio normal, precio de oferta y opción para agregar productos al carrito.
+Se incluirán capturas correspondientes a:
 
-![Catálogo de productos](evidencia/01-catalogo.PNG)
-
-### Carrito de compras
-
-El carrito permite agregar productos, modificar sus cantidades y visualizar tanto la cantidad total de productos como el precio total de la compra.
-
-![Carrito de compras](evidencia/02-carrito.PNG)
-
-### Búsqueda y renderizado condicional
-
-El buscador utiliza el evento `onChange` para actualizar dinámicamente los resultados. Cuando no existen coincidencias, se muestra un mensaje mediante renderizado condicional.
-
-![Búsqueda sin resultados](evidencia/03-busqueda-sin-resultados.PNG)
-
-### Filtrado por categoría
-
-La aplicación permite filtrar dinámicamente los productos según su categoría.
-
-![Filtro de accesorios](evidencia/04-filtro-accesorios.PNG)
-
-### Diseño responsive
-
-La interfaz se adapta a diferentes tamaños de pantalla utilizando Bootstrap y estilos personalizados.
-
-![Vista responsive móvil](evidencia/05-responsive-movil.PNG)
+- Productos cargados dinámicamente desde el archivo JSON.
+- Carrito de compras con productos agregados.
+- Modificación y eliminación de productos del carrito.
+- Renderizado condicional del botón `✓ Agregado`.
+- Mensaje mostrado cuando el carrito se encuentra vacío.
+- Vista responsive de la aplicación.
 
 ---
 
 ## 👩‍💻 Autor
 
 Sofía Medina.
-Proyecto desarrollado como actividad académica para la asignatura **Desarrollo Frontend I**.
+Proyecto desarrollado para la asignatura **Desarrollo Frontend I (PFY2201)**.
 
 ---
 
 ## 📄 Licencia
 
-Proyecto desarrollado con fines académicos y educativos.
+Proyecto desarrollado con fines académicos.

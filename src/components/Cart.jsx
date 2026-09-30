@@ -1,17 +1,11 @@
+import { formatearPrecio } from "../utils/formatters";
+
 function Cart({
     carrito,
     aumentarCantidad,
     disminuirCantidad,
     vaciarCarrito
 }) {
-
-    const formatearPrecio = (precio) => {
-        return new Intl.NumberFormat("es-CL", {
-            style: "currency",
-            currency: "CLP"
-        }).format(precio);
-    };
-
 
     const cantidadTotal = carrito.reduce(
         (total, producto) => total + producto.cantidad,

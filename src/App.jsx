@@ -1,11 +1,9 @@
-import { useState } from "react";
-
-import products from "./data/products";
+import { useEffect, useState } from "react";
 
 import Navbar from "./components/Navbar";
+import SearchBar from "./components/SearchBar";
 import ProductList from "./components/ProductList";
 import Cart from "./components/Cart";
-import SearchBar from "./components/SearchBar";
 import Footer from "./components/Footer";
 
 import "./App.css";
@@ -14,16 +12,70 @@ import "./App.css";
 function App() {
 
     // ==========================================
-    // ESTADOS
+    // ESTADOS DE LA APLICACIÓN
     // ==========================================
 
+    const [productos, setProductos] = useState([]);
     const [carrito, setCarrito] = useState([]);
     const [categoria, setCategoria] = useState("todos");
     const [busqueda, setBusqueda] = useState("");
 
+    // Estados relacionados con la carga dinámica.
+    const [cargando, setCargando] = useState(true);
+    const [error, setError] = useState(null);
+
 
     // ==========================================
-    // AGREGAR PRODUCTO
+    // CARGA DINÁMICA DE PRODUCTOS
+    // ==========================================
+
+    useEffect(() => {
+
+        const cargarProductos = async () => {
+
+            try {
+
+                setCargando(true);
+                setError(null);
+
+                const respuesta = await fetch(
+                    `${import.meta.env.BASE_URL}data/productos.json`
+                );
+
+                if (!respuesta.ok) {
+                    throw new Error(
+                        "No fue posible cargar los productos."
+                    );
+                }
+
+                const datos = await respuesta.json();
+
+                setProductos(datos);
+
+            } catch (errorCarga) {
+
+                console.error(
+                    "Error al cargar los productos:",
+                    errorCarga
+                );
+
+                setError(
+                    "No fue posible cargar el catálogo de productos."
+                );
+
+            } finally {
+
+                setCargando(false);
+            }
+        };
+
+        cargarProductos();
+
+    }, []);
+
+
+    // ==========================================
+    // AGREGAR PRODUCTO AL CARRITO
     // ==========================================
 
     const agregarAlCarrito = (producto) => {
@@ -121,7 +173,7 @@ function App() {
 
 
     // ==========================================
-    // CANTIDAD TOTAL DEL CARRITO
+    // CONTADOR TOTAL DEL CARRITO
     // ==========================================
 
     const cantidadCarrito = carrito.reduce(
@@ -132,10 +184,20 @@ function App() {
 
 
     // ==========================================
-    // FILTRAR POR CATEGORÍA
+    // CAMBIAR CATEGORÍA
     // ==========================================
 
-    const productosFiltrados = products.filter((producto) => {
+    const cambiarCategoria = (nuevaCategoria) => {
+        setCategoria(nuevaCategoria);
+        setBusqueda("");
+    };
+
+
+    // ==========================================
+    // FILTRADO DE PRODUCTOS
+    // ==========================================
+
+    const productosFiltrados = productos.filter((producto) => {
 
         const coincideCategoria =
             categoria === "todos" ||
@@ -156,11 +218,6 @@ function App() {
 
         return coincideCategoria && coincideBusqueda;
     });
-
-    const cambiarCategoria = (nuevaCategoria) => {
-        setCategoria(nuevaCategoria);
-        setBusqueda("");
-    };
 
 
     return (
@@ -188,16 +245,62 @@ function App() {
 
             </header>
 
+
             <SearchBar
                 busqueda={busqueda}
                 setBusqueda={setBusqueda}
             />
 
 
-            <ProductList
-                productos={productosFiltrados}
-                agregarAlCarrito={agregarAlCarrito}
-            />
+            {/* Estado de carga */}
+            {cargando && (
+
+                <div className="container my-5 text-center">
+
+                    <div
+                        className="spinner-border text-primary"
+                        role="status"
+                    >
+                        <span className="visually-hidden">
+                            Cargando...
+                        </span>
+                    </div>
+
+                    <p className="mt-3">
+                        Cargando productos...
+                    </p>
+
+                </div>
+
+            )}
+
+
+            {/* Estado de error */}
+            {error && (
+
+                <div className="container my-5">
+
+                    <div
+                        className="alert alert-danger text-center"
+                        role="alert"
+                    >
+                        {error}
+                    </div>
+
+                </div>
+
+            )}
+
+
+            {/* Catálogo cargado correctamente */}
+            {!cargando && !error && (
+
+                <ProductList
+                    productos={productosFiltrados}
+                    agregarAlCarrito={agregarAlCarrito}
+                />
+
+            )}
 
 
             <Cart
@@ -206,6 +309,7 @@ function App() {
                 disminuirCantidad={disminuirCantidad}
                 vaciarCarrito={vaciarCarrito}
             />
+
 
             <Footer />
 

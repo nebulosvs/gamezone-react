@@ -1,54 +1,103 @@
-function ProductCard({ producto, agregarAlCarrito }) {
+import { useEffect, useState } from "react";
+import { formatearPrecio } from "../utils/formatters";
 
-    const formatearPrecio = (precio) => {
-        return new Intl.NumberFormat("es-CL", {
-            style: "currency",
-            currency: "CLP"
-        }).format(precio);
+
+function ProductCard({
+    producto,
+    agregarAlCarrito
+}) {
+
+    const [agregado, setAgregado] = useState(false);
+
+
+    // Agrega el producto al carrito y muestra
+    // una confirmación visual temporal.
+    const manejarAgregar = () => {
+
+        agregarAlCarrito(producto);
+
+        setAgregado(true);
     };
 
+
+    // Después de 2 segundos, el botón vuelve
+    // automáticamente a su estado original.
+    useEffect(() => {
+
+        if (!agregado) {
+            return;
+        }
+
+        const temporizador = setTimeout(() => {
+            setAgregado(false);
+        }, 2000);
+
+        return () => {
+            clearTimeout(temporizador);
+        };
+
+    }, [agregado]);
+
+
     return (
-        <div className="col-12 col-md-6 col-lg-4">
-            <article className="card h-100 shadow-sm">
+        <div className="col">
+
+            <div className="card h-100 shadow-sm">
 
                 <img
-                    src={producto.imagen}
+                    src={`${import.meta.env.BASE_URL}${producto.imagen}`}
                     className="card-img-top producto-imagen"
                     alt={producto.nombre}
                 />
 
+
                 <div className="card-body d-flex flex-column">
 
-                    <h2 className="card-title h5">
+                    <h5 className="card-title">
                         {producto.nombre}
-                    </h2>
+                    </h5>
+
 
                     <p className="card-text text-muted">
                         {producto.descripcion}
                     </p>
 
+
                     <div className="mt-auto">
 
                         <p className="precio-normal mb-1">
-                            {formatearPrecio(producto.precioNormal)}
+                            {formatearPrecio(
+                                producto.precioNormal
+                            )}
                         </p>
+
 
                         <p className="precio-oferta fs-4 fw-bold mb-3">
-                            {formatearPrecio(producto.precioOferta)}
+                            {formatearPrecio(
+                                producto.precioOferta
+                            )}
                         </p>
 
+
                         <button
-                            className="btn btn-primary w-100"
-                            onClick={() => agregarAlCarrito(producto)}
+                            className={
+                                agregado
+                                    ? "btn btn-success w-100"
+                                    : "btn btn-primary w-100"
+                            }
+                            onClick={manejarAgregar}
                         >
-                            Agregar al carrito
+                            {agregado
+                                ? "✓ Agregado"
+                                : "Agregar al carrito"}
                         </button>
 
                     </div>
 
                 </div>
 
-            </article>
+            </div>
+
         </div>
     );
 }
