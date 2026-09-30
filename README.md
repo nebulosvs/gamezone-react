@@ -411,6 +411,40 @@ El catálogo modifica automáticamente la cantidad de columnas según el espacio
 
 ---
 
+## 📸 Evidencias
+
+### 1. Catálogo cargado dinámicamente
+
+Los productos son cargados desde `public/data/productos.json` mediante `fetch` y `useEffect`.
+
+![Catálogo dinámico](evidencia/01-catalogo-dinamico.PNG)
+
+### 2. Estado de carga
+
+Mientras se obtienen los datos se muestra un indicador de carga mediante renderizado condicional.
+
+![Cargando productos](evidencia/02-cargando-productos.PNG)
+
+### 3. Renderizado condicional
+
+Al agregar un producto, el botón cambia temporalmente a `✓ Agregado`, proporcionando retroalimentación visual al usuario.
+
+![Renderizado condicional](evidencia/03-renderizado-condicional.PNG)
+
+### 4. Carrito de compras
+
+El carrito permite administrar cantidades, eliminar productos y calcular automáticamente el total de la compra.
+
+![Carrito de compras](evidencia/04-carrito.PNG)
+
+### 5. Búsqueda sin resultados
+
+Cuando ningún producto coincide con la búsqueda se muestra un mensaje mediante renderizado condicional.
+
+![Búsqueda sin resultados](evidencia/05-sin-resultados.PNG)
+
+---
+
 ## 👩‍💻 Autor
 
 Sofía Medina.
