@@ -14,7 +14,7 @@
         "precioNormal": 579990,
         "precioOferta": 529990,
         "categoria": "consolas",
-        "imagen": "img/xbox-series-x.jpg",
+        "imagen": "img/xbox-series-x.webp",
         "descripcion": "Potencia y rendimiento de nueva generación con Xbox Series X."
     },
     {
@@ -52,5 +52,32 @@
         "categoria": "accesorios",
         "imagen": "img/switch-pro-controller.jpg",
         "descripcion": "Control Pro para Nintendo Switch con diseño ergonómico."
+    },
+    {
+        "id": 7,
+        "nombre": "Astro Bot",
+        "precioNormal": 69990,
+        "precioOferta": 59990,
+        "categoria": "videojuegos",
+        "imagen": "img/astro-bot.png",
+        "descripcion": "Aventura de plataformas para PlayStation 5 llena de mundos y desafíos."
+    },
+    {
+        "id": 8,
+        "nombre": "Mario Kart 8 Deluxe",
+        "precioNormal": 59990,
+        "precioOferta": 49990,
+        "categoria": "videojuegos",
+        "imagen": "img/mario-kart-8.jpg",
+        "descripcion": "Juego de carreras para Nintendo Switch con circuitos y modos multijugador."
+    },
+    {
+        "id": 9,
+        "nombre": "Dragon Ball: Sparking! ZERO",
+        "precioNormal": 69990,
+        "precioOferta": 59990,
+        "categoria": "videojuegos",
+        "imagen": "img/dragon-ball-sz.webp",
+        "descripcion": "Juego de lucha para Xbox Series X/S inspirado en el universo de Dragon Ball."
     }
 ]

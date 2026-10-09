@@ -4,7 +4,8 @@ import { formatearPrecio } from "../utils/formatters";
 
 function ProductCard({
     producto,
-    agregarAlCarrito
+    agregarAlCarrito,
+    eliminarProducto
 }) {
 
     const [agregado, setAgregado] = useState(false);
@@ -17,6 +18,21 @@ function ProductCard({
         agregarAlCarrito(producto);
 
         setAgregado(true);
+    };
+
+
+    // Elimina el producto del catálogo.
+    const manejarEliminar = () => {
+
+        const confirmarEliminacion = window.confirm(
+            `¿Estás seguro de que deseas eliminar "${producto.nombre}" del catálogo?`
+        );
+
+        if (!confirmarEliminacion) {
+            return;
+        }
+
+        eliminarProducto(producto.id);
     };
 
 
@@ -91,6 +107,18 @@ function ProductCard({
                                 ? "✓ Agregado"
                                 : "Agregar al carrito"}
                         </button>
+
+
+                        {eliminarProducto && (
+
+                            <button
+                                className="btn btn-outline-danger w-100 mt-2"
+                                onClick={manejarEliminar}
+                            >
+                                Eliminar del catálogo
+                            </button>
+
+                        )}
 
                     </div>
 

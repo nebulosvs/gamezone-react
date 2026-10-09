@@ -3,13 +3,17 @@ import ProductCard from "./ProductCard";
 
 function ProductList({
     productos,
-    agregarAlCarrito
+    agregarAlCarrito,
+    eliminarProducto
 }) {
 
     if (productos.length === 0) {
 
         return (
-            <main className="container my-5">
+            <section
+                id="productos"
+                className="container my-5"
+            >
 
                 <div
                     className="alert alert-warning text-center"
@@ -18,13 +22,16 @@ function ProductList({
                     No se encontraron productos.
                 </div>
 
-            </main>
+            </section>
         );
     }
 
 
     return (
-        <main className="container my-5">
+        <section
+            id="productos"
+            className="container my-5"
+        >
 
             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
 
@@ -34,14 +41,16 @@ function ProductList({
                         key={producto.id}
                         producto={producto}
                         agregarAlCarrito={agregarAlCarrito}
+                        eliminarProducto={eliminarProducto}
                     />
 
                 ))}
 
             </div>
 
-        </main>
+        </section>
     );
 }
+
 
 export default ProductList;
