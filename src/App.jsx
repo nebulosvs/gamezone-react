@@ -3,8 +3,11 @@ import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import SearchBar from "./components/SearchBar";
 import ProductList from "./components/ProductList";
+import AdminProducts from "./components/AdminProducts";
 import Cart from "./components/Cart";
+import ContactForm from "./components/ContactForm";
 import Footer from "./components/Footer";
+import AdminLogin from "./components/AdminLogin";
 
 import "./App.css";
 
@@ -19,6 +22,7 @@ function App() {
     const [carrito, setCarrito] = useState([]);
     const [categoria, setCategoria] = useState("todos");
     const [busqueda, setBusqueda] = useState("");
+    const [esAdmin, setEsAdmin] = useState(false);
 
     // Estados relacionados con la carga dinámica.
     const [cargando, setCargando] = useState(true);
@@ -31,6 +35,8 @@ function App() {
 
     useEffect(() => {
 
+        const controller = new AbortController();
+
         const cargarProductos = async () => {
 
             try {
@@ -39,7 +45,10 @@ function App() {
                 setError(null);
 
                 const respuesta = await fetch(
-                    `${import.meta.env.BASE_URL}data/productos.json`
+                    `${import.meta.env.BASE_URL}data/productos.json`,
+                    {
+                        signal: controller.signal
+                    }
                 );
 
                 if (!respuesta.ok) {
@@ -54,24 +63,83 @@ function App() {
 
             } catch (errorCarga) {
 
-                console.error(
-                    "Error al cargar los productos:",
-                    errorCarga
-                );
+                if (errorCarga.name !== "AbortError") {
 
-                setError(
-                    "No fue posible cargar el catálogo de productos."
-                );
+                    console.error(
+                        "Error al cargar los productos:",
+                        errorCarga
+                    );
+
+                    setError(
+                        "No fue posible cargar el catálogo de productos."
+                    );
+                }
 
             } finally {
 
-                setCargando(false);
+                if (!controller.signal.aborted) {
+                    setCargando(false);
+                }
             }
         };
 
         cargarProductos();
 
+        return () => {
+            controller.abort();
+        };
+
     }, []);
+
+
+    // ==========================================
+    // AGREGAR PRODUCTO AL CATÁLOGO
+    // ==========================================
+
+    const agregarProducto = (nuevoProducto) => {
+
+        setProductos((productosActuales) => {
+
+            const nuevoId =
+                productosActuales.length > 0
+                    ? Math.max(
+                        ...productosActuales.map(
+                            (producto) => producto.id
+                        )
+                    ) + 1
+                    : 1;
+
+            return [
+                ...productosActuales,
+                {
+                    ...nuevoProducto,
+                    id: nuevoId
+                }
+            ];
+        });
+    };
+
+
+    // ==========================================
+    // ELIMINAR PRODUCTO DEL CATÁLOGO
+    // ==========================================
+
+    const eliminarProducto = (id) => {
+
+        setProductos((productosActuales) =>
+            productosActuales.filter(
+                (producto) => producto.id !== id
+            )
+        );
+
+        // Si el producto estaba en el carrito,
+        // también se elimina para mantener consistencia.
+        setCarrito((carritoActual) =>
+            carritoActual.filter(
+                (producto) => producto.id !== id
+            )
+        );
+    };
 
 
     // ==========================================
@@ -219,6 +287,19 @@ function App() {
         return coincideCategoria && coincideBusqueda;
     });
 
+    // ==========================================
+    // SESIÓN DE ADMINISTRADOR
+    // ==========================================
+
+    const iniciarSesionAdmin = () => {
+        setEsAdmin(true);
+    };
+
+
+    const cerrarSesionAdmin = () => {
+        setEsAdmin(false);
+    };
+
 
     return (
         <>
@@ -226,6 +307,12 @@ function App() {
             <Navbar
                 cantidadCarrito={cantidadCarrito}
                 cambiarCategoria={cambiarCategoria}
+                esAdmin={esAdmin}
+                cerrarSesionAdmin={cerrarSesionAdmin}
+            />
+
+            <AdminLogin
+                iniciarSesion={iniciarSesionAdmin}
             />
 
 
@@ -245,63 +332,79 @@ function App() {
 
             </header>
 
-
-            <SearchBar
-                busqueda={busqueda}
-                setBusqueda={setBusqueda}
-            />
+            <main>
 
 
-            {/* Estado de carga */}
-            {cargando && (
-
-                <div className="container my-5 text-center">
-
-                    <div
-                        className="spinner-border text-primary"
-                        role="status"
-                    >
-                        <span className="visually-hidden">
-                            Cargando...
-                        </span>
-                    </div>
-
-                    <p className="mt-3">
-                        Cargando productos...
-                    </p>
-
-                </div>
-
-            )}
-
-
-            {/* Estado de error */}
-            {error && (
-
-                <div className="container my-5">
-
-                    <div
-                        className="alert alert-danger text-center"
-                        role="alert"
-                    >
-                        {error}
-                    </div>
-
-                </div>
-
-            )}
-
-
-            {/* Catálogo cargado correctamente */}
-            {!cargando && !error && (
-
-                <ProductList
-                    productos={productosFiltrados}
-                    agregarAlCarrito={agregarAlCarrito}
+                <SearchBar
+                    busqueda={busqueda}
+                    setBusqueda={setBusqueda}
                 />
 
-            )}
 
+                {/* Estado de carga */}
+                {cargando && (
+
+                    <div className="container my-5 text-center">
+
+                        <div
+                            className="spinner-border text-primary"
+                            role="status"
+                        >
+                            <span className="visually-hidden">
+                                Cargando...
+                            </span>
+                        </div>
+
+                        <p className="mt-3">
+                            Cargando productos...
+                        </p>
+
+                    </div>
+
+                )}
+
+
+                {/* Estado de error */}
+                {error && (
+
+                    <div className="container my-5">
+
+                        <div
+                            className="alert alert-danger text-center"
+                            role="alert"
+                        >
+                            {error}
+                        </div>
+
+                    </div>
+
+                )}
+
+
+                {/* Catálogo cargado correctamente */}
+                {!cargando && !error && (
+                    <>
+                        <ProductList
+                            productos={productosFiltrados}
+                            agregarAlCarrito={agregarAlCarrito}
+                            eliminarProducto={
+                                esAdmin
+                                    ? eliminarProducto
+                                    : null
+                            }
+                        />
+
+                        {esAdmin && (
+                            <AdminProducts
+                                agregarProducto={agregarProducto}
+                            />
+                        )}
+                    </>
+                )}
+
+                <ContactForm />
+
+            </main>
 
             <Cart
                 carrito={carrito}
@@ -309,6 +412,7 @@ function App() {
                 disminuirCantidad={disminuirCantidad}
                 vaciarCarrito={vaciarCarrito}
             />
+
 
 
             <Footer />
